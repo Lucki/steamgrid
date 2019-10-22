@@ -14,6 +14,7 @@ import (
 type Game struct {
 	// Official Steam id.
 	ID string
+	CoverID string
 	// Warning, may contain Unicode characters.
 	Name string
 	// Tags, including user-created category and Steam's "Favorite" tag.
@@ -47,7 +48,7 @@ func addGamesFromProfile(user User, games map[string]*Game) (err error) {
 		gameID := groups[1]
 		gameName := groups[2]
 		tags := []string{""}
-		games[gameID] = &Game{gameID, gameName, tags, "", nil, nil, ""}
+		games[gameID] = &Game{gameID, gameID, gameName, tags, "", nil, nil, ""}
 	}
 
 	return
@@ -85,7 +86,7 @@ func addUnknownGames(user User, games map[string]*Game) {
 				// If for some reason it wasn't included in the profile, create a new
 				// entry for it now. Unfortunately we don't have a name.
 				gameName := ""
-				games[gameID] = &Game{gameID, gameName, []string{tag}, "", nil, nil, ""}
+				games[gameID] = &Game{gameID, gameID, gameName, []string{tag}, "", nil, nil, ""}
 			}
 		}
 	}
@@ -118,7 +119,7 @@ func addNonSteamGames(user User, games map[string]*Game) {
 		// to 64bit Steam ID. No idea why Steam chose this operation.
 		top := uint64(crc32.ChecksumIEEE(uniqueName)) | 0x80000000
 		gameID := strconv.FormatUint(top<<32|0x02000000, 10)
-		game := Game{gameID, string(gameName), []string{}, "", nil, nil, ""}
+		game := Game{gameID, strconv.FormatUint(top, 10), string(gameName), []string{}, "", nil, nil, ""}
 		games[gameID] = &game
 
 		tagsText := gameGroups[3]

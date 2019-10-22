@@ -203,7 +203,12 @@ func startApplication() {
 					errorAndExit(err)
 				}
 
-				imagePath := filepath.Join(gridDir, game.ID + artStyleExtensions[0] + game.ImageExt)
+				imagePath := ""
+				if artStyle == "Cover" {
+					imagePath = filepath.Join(gridDir, game.CoverID + artStyleExtensions[0] + game.ImageExt)
+				}  else if artStyle == "Banner" {
+					imagePath = filepath.Join(gridDir, game.ID + artStyleExtensions[0] + game.ImageExt)
+				}
 				err = ioutil.WriteFile(imagePath, game.OverlayImageBytes, 0666)
 				if err != nil {
 					fmt.Printf("Failed to write image for %v (%v) because: %v\n", game.Name, artStyle, err.Error())

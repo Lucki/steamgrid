@@ -22,7 +22,13 @@ func getBackupPath(gridDir string, game *Game, artStyleExtensions []string) stri
 	hash := sha256.Sum256(game.OverlayImageBytes)
 	// [:] is required to convert a fixed length byte array to a byte slice.
 	hexHash := hex.EncodeToString(hash[:])
-	return filepath.Join(gridDir, "originals", game.ID + artStyleExtensions[0] + " " + hexHash+game.ImageExt)
+	backupFileName := ""
+	if artStyleExtensions[0] == "p"{
+		backupFileName = game.CoverID
+	} else {
+		backupFileName = game.ID
+	}
+	return filepath.Join(gridDir, "originals", backupFileName + artStyleExtensions[0] + " " + hexHash+game.ImageExt)
 }
 
 func RemoveExisting(gridDir string, gameId string, artStyleExtensions []string) error {
